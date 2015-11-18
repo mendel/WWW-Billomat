@@ -8,7 +8,7 @@ use warnings;
 use Moose;
 
 use URI;
-use REST::Client;
+use WWW::Billomat::RESTClient;
 use Encode;
 
 use WWW::Billomat::Client;
@@ -64,7 +64,7 @@ has api_key => (
 
 has rest_client => (
     is => 'rw',
-    isa => 'REST::Client',
+    isa => 'WWW::Billomat::RESTClient',
     lazy_build => 1,
     handles => {
         response_code => 'responseCode',
@@ -120,7 +120,8 @@ set is:
 
 B<NOTE>: all methods return either undef or false in case of failure.
 To investigate error conditions, three methods are delegated to the
-underlying L<REST::Client> object:
+underlying L<WWW::Billomat::RESTClient> (which is a subclass of <REST::Client>)
+object:
 
 =over 4
 
@@ -522,7 +523,7 @@ sub create_invoice_item {
 sub _build_rest_client {
     my($self) = @_;
 
-    my $client = REST::Client->new(
+    my $client = WWW::Billomat::RESTClient->new(
         host => $self->base_url->as_string,
     );
     $client->addHeader(
